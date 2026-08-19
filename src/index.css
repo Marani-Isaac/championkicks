@@ -1,0 +1,435 @@
+@import 'tailwindcss';
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
+:root {
+  --ck-ink: #0b0b0b;
+  --ck-paper: #f7f5f2;
+  --ck-mute: #6b6b6b;
+  --ck-line: #e4e0da;
+  --ck-accent: #e8ff47;
+  --ck-accent-deep: #c8e012;
+  --ck-danger: #d64545;
+  --ck-success: #1f8a5b;
+  --font-display: 'DM Serif Display', Georgia, serif;
+  --font-body: 'Raleway', sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--ck-paper);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font-body);
+  color: var(--ck-ink);
+  background:
+    radial-gradient(ellipse 80% 50% at 10% -10%, rgba(232, 255, 71, 0.18), transparent 55%),
+    radial-gradient(ellipse 60% 40% at 100% 0%, rgba(11, 11, 11, 0.06), transparent 50%),
+    linear-gradient(180deg, #faf9f7 0%, var(--ck-paper) 40%, #f0ece6 100%);
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.03em;
+  font-weight: 400;
+}
+
+.ck-container {
+  width: min(1180px, calc(100% - 2rem));
+  margin-inline: auto;
+}
+
+.ck-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.35rem;
+  border: 1px solid transparent;
+  border-radius: 0.85rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0;
+  transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  cursor: pointer;
+}
+
+.ck-btn.rounded-full {
+  border-radius: 9999px;
+}
+
+.ck-btn:hover {
+  transform: translateY(-1px);
+}
+
+.ck-btn-primary {
+  background: var(--ck-ink);
+  color: #fff;
+}
+
+.ck-btn-primary:hover {
+  background: #222;
+  color: #fff;
+}
+
+.ck-btn-accent {
+  background: var(--ck-accent);
+  color: var(--ck-ink);
+}
+
+.ck-btn-accent:hover {
+  background: var(--ck-accent-deep);
+  color: var(--ck-ink);
+}
+
+.ck-btn-outline {
+  background: transparent;
+  border-color: var(--ck-ink);
+  color: var(--ck-ink);
+}
+
+.ck-btn-outline:hover {
+  background: var(--ck-ink);
+  color: #fff;
+}
+
+.ck-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.55rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-radius: 0.55rem;
+  background: var(--ck-accent);
+  color: var(--ck-ink);
+}
+
+.ck-badge-muted {
+  background: var(--ck-ink);
+  color: #fff;
+}
+
+.ck-badge-danger {
+  background: var(--ck-danger);
+  color: #fff;
+}
+
+.ck-badge-success {
+  background: var(--ck-success);
+  color: #fff;
+}
+
+.ck-input,
+.ck-select,
+.ck-textarea {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--ck-line);
+  background: #fff;
+  color: var(--ck-ink);
+  font-family: inherit;
+  font-size: 0.95rem;
+  border-radius: 0.85rem;
+}
+
+.ck-input::placeholder,
+.ck-textarea::placeholder {
+  color: #9a958c;
+}
+
+.ck-input:focus,
+.ck-select:focus,
+.ck-textarea:focus {
+  outline: 2px solid var(--ck-accent);
+  outline-offset: 1px;
+  border-color: var(--ck-ink);
+}
+
+.ck-label {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--ck-mute);
+}
+
+.ck-hint {
+  margin-top: 0.3rem;
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ck-mute);
+}
+
+.ck-card-surface {
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid var(--ck-line);
+  border-radius: 1.1rem;
+  backdrop-filter: blur(6px);
+}
+
+.ck-logo {
+  display: inline-flex;
+  align-items: center;
+  background: #000;
+  padding: 0.35rem 0.55rem;
+  border-radius: 0.85rem;
+}
+
+.ck-premium-card {
+  background: #fff;
+  border: 1px solid rgba(11, 11, 11, 0.06);
+  border-radius: 1.25rem;
+  box-shadow: 0 10px 30px rgba(11, 11, 11, 0.06);
+  transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 0.45s ease;
+}
+
+.ck-premium-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 22px 48px rgba(11, 11, 11, 0.14);
+}
+
+.product-card {
+  border-radius: 1.1rem;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid rgba(11, 11, 11, 0.06);
+  box-shadow: 0 8px 22px rgba(11, 11, 11, 0.06);
+  transform-style: preserve-3d;
+  transition: transform 0.18s ease, box-shadow 0.35s ease;
+}
+
+.product-card h3,
+.product-card p {
+  letter-spacing: -0.03em;
+}
+
+.product-card:hover {
+  box-shadow: 0 28px 60px rgba(11, 11, 11, 0.16);
+}
+
+.product-card img {
+  transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.product-card:hover img {
+  transform: scale(1.08);
+}
+
+.ck-reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.85s ease, transform 0.85s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.ck-reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+.ck-float-3d {
+  animation: ck-float-3d 6.5s ease-in-out infinite;
+  transform-style: preserve-3d;
+}
+
+.ck-parallax-layer {
+  will-change: transform;
+}
+
+@keyframes ck-float-3d {
+  0%,
+  100% {
+    transform: translateY(0) rotateY(-10deg) rotateX(6deg);
+  }
+  50% {
+    transform: translateY(-18px) rotateY(10deg) rotateX(-4deg);
+  }
+}
+
+@keyframes ck-shine {
+  0% {
+    transform: translateX(-120%) rotate(18deg);
+  }
+  100% {
+    transform: translateX(180%) rotate(18deg);
+  }
+}
+
+.ck-card-shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.ck-card-shine::after {
+  content: '';
+  position: absolute;
+  inset: -40% auto -40% -40%;
+  width: 40%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.28), transparent);
+  transform: translateX(-120%) rotate(18deg);
+  pointer-events: none;
+}
+
+.ck-card-shine:hover::after {
+  animation: ck-shine 0.9s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ck-reveal,
+  .ck-float-3d,
+  .product-card,
+  .ck-premium-card,
+  .product-card img {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+
+  .ck-reveal {
+    opacity: 1;
+  }
+}
+
+.hero-panel {
+  animation: rise-in 0.8s ease both;
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.55s ease both;
+}
+
+.nav-link-ck {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4rem 0.9rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--ck-line);
+  background: #fff;
+  font-weight: 600;
+  font-size: 0.82rem;
+  letter-spacing: 0;
+  box-shadow: 0 2px 8px rgba(11, 11, 11, 0.05);
+  transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.nav-link-ck:hover {
+  transform: translateY(-1px);
+}
+
+.nav-link-ck.active {
+  background: var(--ck-ink);
+  color: #fff;
+  border-color: var(--ck-ink);
+}
+
+.admin-shell {
+  min-height: 100vh;
+  background: #111;
+  color: #f5f5f5;
+}
+
+.admin-shell .ck-input,
+.admin-shell .ck-select,
+.admin-shell .ck-textarea {
+  background: #1a1a1a;
+  border-color: #333;
+  color: #f5f5f5;
+}
+
+.admin-panel {
+  background: #181818;
+  border: 1px solid #2a2a2a;
+  border-radius: 1.1rem;
+}
+
+/* Soften Bootstrap defaults to match brand */
+.nav-tabs .nav-link {
+  border-radius: 0.65rem 0.65rem 0 0;
+  color: var(--ck-mute);
+  border: none;
+  border-bottom: 2px solid transparent;
+  font-weight: 600;
+}
+
+.nav-tabs .nav-link.active {
+  color: var(--ck-ink);
+  background: transparent;
+  border-bottom-color: var(--ck-accent);
+}
+
+.form-control,
+.form-select {
+  border-radius: 0.85rem;
+}
+
+.ck-whatsapp-float {
+  position: fixed;
+  right: 1.15rem;
+  bottom: 1.15rem;
+  z-index: 60;
+  display: inline-flex;
+  height: 3.75rem;
+  width: 3.75rem;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 1rem;
+  background: transparent;
+  box-shadow: 0 12px 28px rgba(11, 11, 11, 0.18);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ck-whatsapp-float:hover {
+  transform: translateY(-3px) scale(1.06);
+  box-shadow: 0 16px 36px rgba(37, 211, 102, 0.55);
+}
