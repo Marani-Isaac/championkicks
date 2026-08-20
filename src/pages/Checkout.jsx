@@ -151,7 +151,7 @@ export default function Checkout() {
           </div>
         </div>
 
-        <div className="ck-card-surface h-fit p-5">
+        <div className="ck-card-surface ck-card-ink h-fit p-5">
           <h2 className="font-display text-3xl">{isBuyNow ? 'Buy now' : 'Order'}</h2>
           {isBuyNow && (
             <p className="mt-1 text-xs text-[var(--ck-mute)]">Other cart items are left untouched.</p>

@@ -196,6 +196,51 @@ img {
   backdrop-filter: blur(6px);
 }
 
+.ck-card-accent {
+  background: var(--ck-accent);
+  color: var(--ck-ink);
+  border-color: rgba(11, 11, 11, 0.08);
+  --ck-mute: #3a3a3a;
+  --ck-line: rgba(11, 11, 11, 0.16);
+}
+
+.ck-card-ink {
+  background: var(--ck-ink);
+  color: #fff;
+  border-color: transparent;
+  --ck-mute: rgba(255, 255, 255, 0.72);
+  --ck-line: rgba(255, 255, 255, 0.18);
+}
+
+.ck-card-ink .ck-label,
+.ck-card-ink .ck-hint {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.ck-card-ink a {
+  color: inherit;
+}
+
+.ck-card-ink .ck-btn-primary {
+  background: #fff;
+  color: var(--ck-ink);
+}
+
+.ck-card-ink .ck-btn-primary:hover {
+  background: #f3f3f3;
+  color: var(--ck-ink);
+}
+
+.ck-card-ink .ck-btn-outline {
+  border-color: #fff;
+  color: #fff;
+}
+
+.ck-card-ink .ck-btn-outline:hover {
+  background: #fff;
+  color: var(--ck-ink);
+}
+
 .ck-logo {
   display: inline-flex;
   align-items: center;
@@ -215,6 +260,18 @@ img {
 .ck-premium-card:hover {
   transform: translateY(-8px);
   box-shadow: 0 22px 48px rgba(11, 11, 11, 0.14);
+}
+
+.ck-premium-card.ck-card-accent,
+.ck-card-surface.ck-card-accent {
+  background: var(--ck-accent);
+  color: var(--ck-ink);
+}
+
+.ck-premium-card.ck-card-ink,
+.ck-card-surface.ck-card-ink {
+  background: var(--ck-ink);
+  color: #fff;
 }
 
 .product-card {
@@ -367,9 +424,20 @@ img {
 }
 
 .nav-link-ck.active {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.nav-link-ck.ck-card-accent {
+  background: var(--ck-accent);
+  color: var(--ck-ink);
+  border-color: transparent;
+}
+
+.nav-link-ck.ck-card-ink {
   background: var(--ck-ink);
   color: #fff;
-  border-color: var(--ck-ink);
+  border-color: transparent;
 }
 
 .admin-shell {

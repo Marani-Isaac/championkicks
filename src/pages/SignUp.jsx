@@ -79,7 +79,7 @@ export default function SignUp() {
         </button>
         <p className="text-center text-sm text-[var(--ck-mute)]">
           Already have an account?{' '}
-          <Link to="/signin" className="font-semibold text-[var(--ck-ink)] underline">
+          <Link to="/signin" className="font-semibold underline">
             Sign in
           </Link>
         </p>

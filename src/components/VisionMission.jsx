@@ -5,8 +5,8 @@ export default function VisionMission() {
     <section className="bg-white/50 py-16">
       <div className="ck-container grid gap-5 md:grid-cols-2">
         <Reveal>
-          <article className="ck-premium-card p-7">
-            <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--ck-accent)] font-display text-2xl">
+          <article className="ck-premium-card ck-card-accent p-7">
+            <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--ck-ink)] font-display text-2xl text-[var(--ck-accent)]">
               01
             </div>
             <h3 className="font-display text-3xl">Our vision</h3>
@@ -17,8 +17,8 @@ export default function VisionMission() {
           </article>
         </Reveal>
         <Reveal delay={100}>
-          <article className="ck-premium-card p-7">
-            <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--ck-ink)] font-display text-2xl text-[var(--ck-accent)]">
+          <article className="ck-premium-card ck-card-ink p-7">
+            <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--ck-accent)] font-display text-2xl text-[var(--ck-ink)]">
               02
             </div>
             <h3 className="font-display text-3xl">Our mission</h3>

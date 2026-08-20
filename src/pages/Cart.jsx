@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
 import { formatPrice } from '../components/ProductCard'
+import { cardTone } from '../lib/ui'
 
 export default function Cart() {
   const { items, subtotal, updateQuantity, removeItem, itemCount, clearBuyNow } = useCart()
@@ -24,10 +25,10 @@ export default function Cart() {
 
       <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_320px]">
         <div className="space-y-4">
-          {items.map((item) => (
+          {items.map((item, i) => (
             <div
               key={item.id}
-              className="ck-card-surface flex flex-col gap-4 p-4 sm:flex-row sm:items-center"
+              className={`ck-card-surface flex flex-col gap-4 p-4 sm:flex-row sm:items-center ${cardTone(i)}`}
             >
               <img
                 src={

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import WhoWeAre from '../components/WhoWeAre'
 import VisionMission from '../components/VisionMission'
+import { cardTone } from '../lib/ui'
 import {
   BRANCHES,
   EMAIL,
@@ -66,8 +67,8 @@ export default function About() {
         <div className="ck-container">
           <h2 className="font-display text-4xl">Our branches</h2>
           <div className="mt-6 grid gap-5 md:grid-cols-2">
-            {BRANCHES.map((branch) => (
-              <article key={branch.city} className="ck-premium-card p-6">
+            {BRANCHES.map((branch, i) => (
+              <article key={branch.city} className={`ck-premium-card p-6 ${cardTone(i)}`}>
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--ck-mute)]">
                   {branch.city}
                 </p>

@@ -1,5 +1,6 @@
 import { Link, NavLink } from 'react-router-dom'
 import Logo from './Logo'
+import { cardTone } from '../lib/ui'
 
 const links = [
   { to: '/', label: 'Homepage', end: true },
@@ -18,12 +19,12 @@ export default function Navbar() {
         </Link>
 
         <nav className="flex flex-wrap items-center gap-2">
-          {links.map((link) => (
+          {links.map((link, i) => (
             <NavLink
               key={link.to}
               to={link.to}
               end={link.end}
-              className={({ isActive }) => `nav-link-ck ${isActive ? 'active' : ''}`}
+              className={({ isActive }) => `nav-link-ck ${cardTone(i)} ${isActive ? 'active' : ''}`}
             >
               {link.label}
             </NavLink>

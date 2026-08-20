@@ -11,13 +11,14 @@ import {
   mapsEmbedUrl,
 } from '../lib/company'
 import SocialLinks from '../components/SocialLinks'
+import { cardTone } from '../lib/ui'
 
 const careCards = [
   {
     title: 'Call',
     hint: 'Speak with the team during shop hours.',
     content: (
-      <a className="font-semibold text-[var(--ck-ink)] underline" href={PHONE_TEL}>
+      <a className="font-semibold underline" href={PHONE_TEL}>
         {PHONE_DISPLAY}
       </a>
     ),
@@ -27,7 +28,7 @@ const careCards = [
     hint: 'Fastest way for size checks and stock.',
     content: (
       <a
-        className="font-semibold text-[var(--ck-ink)] underline"
+        className="font-semibold underline"
         href={WHATSAPP_URL}
         target="_blank"
         rel="noreferrer"
@@ -40,7 +41,7 @@ const careCards = [
     title: 'Email',
     hint: 'For invoices, orders, and written follow-up.',
     content: (
-      <a className="break-all font-semibold text-[var(--ck-ink)] underline" href={`mailto:${EMAIL}`}>
+      <a className="break-all font-semibold underline" href={`mailto:${EMAIL}`}>
         {EMAIL}
       </a>
     ),
@@ -48,7 +49,7 @@ const careCards = [
   {
     title: 'Hours',
     hint: 'Both Nairobi and Eldoret branches.',
-    content: <p className="font-semibold text-[var(--ck-ink)]">Daily, 10:00–17:00</p>,
+    content: <p className="font-semibold">Daily, 10:00–17:00</p>,
   },
 ]
 
@@ -179,8 +180,8 @@ export default function Contact() {
         <div className="space-y-4">
           <h2 className="font-display text-3xl">Customer care</h2>
           <div className="grid gap-4 sm:grid-cols-2">
-            {careCards.map((card) => (
-              <article key={card.title} className="ck-card-surface p-4">
+            {careCards.map((card, i) => (
+              <article key={card.title} className={`ck-card-surface p-4 ${cardTone(i)}`}>
                 <p className="text-xs font-semibold uppercase tracking-[0.08em] text-[var(--ck-mute)]">
                   {card.title}
                 </p>
@@ -189,7 +190,7 @@ export default function Contact() {
               </article>
             ))}
           </div>
-          <div className="ck-card-surface p-4">
+          <div className="ck-card-surface ck-card-ink p-4">
             <p className="ck-label">Social</p>
             <SocialLinks />
           </div>

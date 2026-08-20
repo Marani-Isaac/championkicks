@@ -155,7 +155,7 @@ export default function Products() {
       </div>
 
       {!loading && filtered.length === 0 && (
-        <div className="ck-card-surface mt-4 p-8 text-center text-sm text-[var(--ck-mute)]">
+        <div className="ck-card-surface ck-card-accent mt-4 p-8 text-center text-sm text-[var(--ck-mute)]">
           No products match this filter. Try another category or clear search.
         </div>
       )}

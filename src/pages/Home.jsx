@@ -6,6 +6,7 @@ import Reveal from '../components/Reveal'
 import WhoWeAre from '../components/WhoWeAre'
 import { productsApi, testimonialsApi, normalizeProducts, normalizeTestimonial, unwrapList } from '../lib/api'
 import { PRODUCT_CATEGORIES } from '../lib/categories'
+import { cardTone } from '../lib/ui'
 
 function lastThreePerCategory(products) {
   const sorted = [...products].sort((a, b) => Number(b.id || 0) - Number(a.id || 0))
@@ -182,7 +183,7 @@ export default function Home() {
         {loading && <p className="text-sm text-[var(--ck-mute)]">Loading products…</p>}
         {error && <p className="text-sm text-[var(--ck-danger)]">{error}</p>}
         {!loading && newArrivals.length === 0 && (
-          <p className="ck-premium-card p-6 text-sm text-[var(--ck-mute)]">
+          <p className="ck-premium-card ck-card-accent p-6 text-sm text-[var(--ck-mute)]">
             No products yet. Start the backend on port 5000, then add items in Admin.
           </p>
         )}
@@ -207,7 +208,7 @@ export default function Home() {
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {audiences.map((item, i) => (
               <Reveal key={item.title} delay={i * 70}>
-                <Link to={item.href} className="ck-premium-card ck-card-shine group block overflow-hidden">
+                <Link to={item.href} className={`ck-premium-card ck-card-shine group block overflow-hidden ${cardTone(i)}`}>
                   <div className="relative h-52 overflow-hidden">
                     <img
                       src={item.image}
@@ -238,7 +239,7 @@ export default function Home() {
         <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
           {values.map((value, i) => (
             <Reveal key={value.title} delay={i * 80}>
-              <article className="ck-premium-card h-full p-6">
+              <article className={`ck-premium-card h-full p-6 ${cardTone(i)}`}>
                 <p className="font-display text-4xl text-[var(--ck-mute)]">0{i + 1}</p>
                 <h3 className="mt-3 font-display text-2xl">{value.title}</h3>
                 <p className="mt-2 text-sm font-normal leading-relaxed text-[var(--ck-mute)]">{value.desc}</p>
@@ -291,7 +292,7 @@ export default function Home() {
             )}
             {testimonials.map((t, i) => (
               <Reveal key={t.id} delay={i * 90}>
-                <blockquote className="ck-premium-card h-full p-6">
+                <blockquote className={`ck-premium-card h-full p-6 ${cardTone(i)}`}>
                   <p className="font-display text-2xl leading-snug">&ldquo;{t.comment}&rdquo;</p>
                   <footer className="mt-4 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--ck-mute)]">
                     {t.username || 'Champion Kicks customer'} · {t.rating}/5
