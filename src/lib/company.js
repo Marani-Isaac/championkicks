@@ -31,3 +31,7 @@ export const BRANCHES = [
 export function mapsEmbedUrl(query) {
   return `https://maps.google.com/maps?q=${encodeURIComponent(query)}&z=16&output=embed`
 }
+
+export function mapsSearchUrl(query) {
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`
+}

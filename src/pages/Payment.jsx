@@ -20,6 +20,7 @@ export default function Payment() {
   const productId = state?.productId || lastOrder?.product_id || ''
   const total = state?.total || lastOrder?.total || 0
   const username = state?.username || lastOrder?.username || user?.username || ''
+  const orderId = state?.orderId || lastOrder?.order_id || ''
 
   const [form, setForm] = useState({
     username: username || '',
@@ -49,6 +50,7 @@ export default function Payment() {
         amount: String(form.amount),
         product_id: String(form.product_id),
         payment_status: form.payment_status,
+        order_id: orderId ? String(orderId) : '',
       })
       navigate('/order-success', {
         state: {
@@ -58,7 +60,7 @@ export default function Payment() {
         },
       })
     } catch (err) {
-      setError(err.response?.data?.message || err.message || 'Payment could not be recorded')
+      setError(err.response?.data?.error || err.response?.data?.message || err.message || 'Payment could not be recorded')
     } finally {
       setSubmitting(false)
     }
@@ -83,7 +85,7 @@ export default function Payment() {
 
   return (
     <div className="ck-container py-10">
-      <h1 className="font-display text-5xl">Make Payment</h1>
+      <h1 className="font-display ck-page-title">Make Payment</h1>
       <p className="mt-2 max-w-xl text-sm text-[var(--ck-mute)]">
         Record payment against product #{productId || '—'} · due{' '}
         <strong>{formatPrice(total)}</strong>

@@ -8,8 +8,8 @@ export default function Footer() {
 
   return (
     <footer className="mt-auto border-t border-[var(--ck-line)] bg-[var(--ck-ink)] text-[#f5f5f5]">
-      <div className="ck-container grid gap-10 py-14 md:grid-cols-4">
-        <div className="md:col-span-2">
+      <div className="ck-container grid gap-10 py-10 sm:grid-cols-2 sm:py-14 xl:grid-cols-4">
+        <div className="sm:col-span-2">
           <Logo className="h-14 w-auto" />
           <p className="mt-3 max-w-md text-sm leading-relaxed text-[#bdbdbd]">
             Exclusive clothes and sneakers — the biggest, the baddest. Visit us in Nairobi and

@@ -97,7 +97,7 @@ export default function Products() {
   return (
     <div className="ck-container py-10">
       <div className="mb-8">
-        <h1 className="font-display text-5xl">Our Products</h1>
+        <h1 className="font-display ck-page-title">Our Products</h1>
         <p className="mt-2 text-sm text-[var(--ck-mute)]">
           Search and filter across shoes and clothing — {PRODUCT_CATEGORIES.length} curated categories.
         </p>
@@ -110,7 +110,7 @@ export default function Products() {
         <input
           id="product-search"
           type="search"
-          className="ck-input max-w-xl"
+          className="ck-input w-full max-w-xl"
           placeholder="e.g. Air Force, hoodie, sneakers…"
           value={query}
           onChange={(e) => onSearchChange(e.target.value)}
@@ -148,7 +148,7 @@ export default function Products() {
         </p>
       )}
 
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
         {filtered.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}

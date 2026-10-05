@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { isProductAvailable } from './format'
 
 /** Same-origin `/api` goes through the Vite proxy to 127.0.0.1:5000 */
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api'
@@ -37,6 +38,7 @@ export function productImageUrl(imageName) {
 /** Map backend product row → storefront/admin UI shape */
 export function normalizeProduct(row) {
   if (!row) return null
+  const available = isProductAvailable(row.available)
   return {
     id: row.product_id ?? row.id,
     product_id: row.product_id ?? row.id,
@@ -44,7 +46,8 @@ export function normalizeProduct(row) {
     description: row.product_description ?? row.description ?? '',
     category: row.product_category ?? row.category ?? '',
     price: Number(row.product_cost ?? row.price ?? 0),
-    stock: row.stock ?? 99,
+    available,
+    stock: available ? Number(row.stock ?? 99) : 0,
     image_url: productImageUrl(row.product_image || row.image_url || ''),
     product_image: row.product_image || '',
     raw: row,
@@ -57,14 +60,29 @@ export function normalizeProducts(payload) {
 
 export function normalizeOrder(row) {
   if (!row) return null
+  const quantity = Number(row.quantity || 1)
+  const unitPrice = Number(row.product_cost || row.unit_price || 0)
+  const subtotal = unitPrice * quantity
+  const deliveryCost = Number(row.delivery_cost || 0)
+  const storedTotal = Number(row.total_amount || 0)
+  const status = String(row.status || 'pending').toLowerCase()
   return {
     id: row.order_id ?? row.id,
+    pack_id: row.pack_id || row.order_id || row.id,
     product_id: row.product_id,
-    quantity: Number(row.quantity || 1),
+    quantity,
     created_at: row.order_date,
     product_name: row.product_name,
-    total_amount: Number(row.product_cost || 0) * Number(row.quantity || 1),
-    status: row.status || 'Pending',
+    unit_price: unitPrice,
+    subtotal,
+    delivery_cost: deliveryCost,
+    total_amount: storedTotal || subtotal + deliveryCost,
+    status: status === 'complete' || status === 'completed' ? 'complete' : 'pending',
+    username: row.username || '',
+    email: row.email || '',
+    phone: row.phone || '',
+    address: row.address || '',
+    user_id: row.user_id,
     product_image: productImageUrl(row.product_image || ''),
     raw: row,
   }
@@ -85,7 +103,11 @@ export function normalizePayment(row) {
 
 export function normalizeTestimonial(row) {
   if (!row) return null
-  const approved = row.approved === 1 || row.approved === true || row.approved === '1'
+  const approved =
+    row.approved === 1 ||
+    row.approved === true ||
+    row.approved === '1' ||
+    Number(row.approved) === 1
   return {
     id: row.testimonial_id ?? row.id,
     username: row.username,
@@ -128,6 +150,7 @@ export const paymentsApi = {
 export const testimonialsApi = {
   getAll: (params) => api.get('/get_testimonials', { params }),
   create: (fields) => api.post('/add_testimonial', toFormData(fields)),
+  update: (fields) => api.post('/update_testimonial', toFormData(fields)),
 }
 
 export default api

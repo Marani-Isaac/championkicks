@@ -4,9 +4,11 @@ import { useCart } from '../context/CartContext'
 import { useAuth } from '../context/AuthContext'
 import { ordersApi } from '../lib/api'
 import { formatPrice } from '../components/ProductCard'
+import DeliveryMapPicker from '../components/DeliveryMapPicker'
+import { mapsSearchUrl } from '../lib/company'
 
 export default function Checkout() {
-  const { checkoutItems, checkoutSubtotal, isBuyNow, clearCart, clearBuyNow } = useCart()
+  const { checkoutItems, checkoutSubtotal, isBuyNow, clearCart, clearBuyNow, hasUnavailableCheckout, unavailableCheckoutItems } = useCart()
   const { isAuthenticated, user } = useAuth()
   const navigate = useNavigate()
   const [form, setForm] = useState({
@@ -16,6 +18,9 @@ export default function Checkout() {
     address: user?.address || '',
     city: 'Nairobi',
     notes: '',
+    mapQuery: user?.address || '',
+    mapLat: '',
+    mapLng: '',
   })
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
@@ -24,7 +29,7 @@ export default function Checkout() {
   if (checkoutItems.length === 0) {
     return (
       <div className="ck-container py-16 text-center">
-        <h1 className="font-display text-5xl">Checkout</h1>
+        <h1 className="font-display ck-page-title">Checkout</h1>
         <p className="mt-3 text-[var(--ck-mute)]">Your cart is empty.</p>
         <Link to="/products" className="ck-btn ck-btn-primary mt-6">
           Shop products
@@ -42,18 +47,45 @@ export default function Checkout() {
       return
     }
 
+    if (hasUnavailableCheckout) {
+      setError('Remove unavailable items from your cart before placing the order.')
+      return
+    }
+
+    if (!form.mapQuery.trim()) {
+      setError('Add a Google Maps delivery location so we can find you.')
+      return
+    }
+
     setSubmitting(true)
     setError('')
     try {
-      // Backend add_order accepts one product_id + quantity per request
-      for (let i = 0; i < checkoutItems.length; i += 1) {
-        const item = checkoutItems[i]
-        setProgress(`Placing item ${i + 1} of ${checkoutItems.length}…`)
-        await ordersApi.create({
-          product_id: item.id,
-          quantity: String(item.quantity),
-        })
-      }
+      setProgress('Submitting your order pack…')
+      const deliveryAddress = [
+        form.address,
+        form.city,
+        form.mapQuery,
+        form.mapLat && form.mapLng ? `${form.mapLat},${form.mapLng}` : '',
+      ]
+        .filter(Boolean)
+        .join(' | ')
+        .slice(0, 255)
+
+      const { data } = await ordersApi.create({
+        items: JSON.stringify(
+          checkoutItems.map((item) => ({
+            product_id: item.id,
+            quantity: item.quantity,
+          })),
+        ),
+        user_id: user?.user_id != null ? String(user.user_id) : '',
+        username: form.fullName || user?.username || '',
+        email: form.email || user?.email || '',
+        phone: form.phone || user?.phone || '',
+        address: deliveryAddress || user?.address || '',
+        notes: form.notes || '',
+      })
+      const lastOrderId = data?.pack_id || data?.order_id || ''
 
       const primary = checkoutItems[0]
       sessionStorage.setItem(
@@ -63,21 +95,34 @@ export default function Checkout() {
           product_name: primary.name,
           total: checkoutSubtotal,
           items: checkoutItems,
-          shipping: form,
+          shipping: {
+            ...form,
+            mapsUrl: mapsSearchUrl(form.mapQuery),
+          },
           username: user?.username,
+          order_id: lastOrderId,
+          pack_id: lastOrderId,
         }),
       )
       if (isBuyNow) clearBuyNow()
       else clearCart()
-      navigate('/payment', {
+      navigate('/order-success', {
         state: {
+          orderId: lastOrderId,
           productId: primary.id,
           total: checkoutSubtotal,
-          username: user?.username,
+          itemCount: checkoutItems.length,
+          email: form.email || user?.email || '',
+          phone: form.phone || user?.phone || '',
         },
       })
     } catch (err) {
-      setError(err.response?.data?.message || err.message || 'Could not place order')
+      setError(
+        err.response?.data?.error ||
+          err.response?.data?.message ||
+          err.message ||
+          'Could not place order',
+      )
     } finally {
       setSubmitting(false)
       setProgress('')
@@ -86,12 +131,26 @@ export default function Checkout() {
 
   return (
     <div className="ck-container py-10">
-      <h1 className="font-display text-5xl">Checkout</h1>
+      <h1 className="font-display ck-page-title">Checkout</h1>
       <p className="mt-2 text-sm text-[var(--ck-mute)]">
         {isBuyNow
           ? `Buying this item only · ${formatPrice(checkoutSubtotal)}.`
           : `Enter shipping details and submit your order (${formatPrice(checkoutSubtotal)}).`}
       </p>
+
+      {hasUnavailableCheckout && (
+        <div
+          className="mt-5 rounded-2xl border border-[var(--ck-danger)] bg-[#d64545] px-4 py-3 text-sm text-white"
+          role="alert"
+        >
+          {unavailableCheckoutItems.map((item) => item.name).join(', ')}{' '}
+          {unavailableCheckoutItems.length === 1 ? 'is' : 'are'} unavailable.{' '}
+          <Link to="/cart" className="font-semibold underline">
+            Return to cart
+          </Link>{' '}
+          and remove {unavailableCheckoutItems.length === 1 ? 'it' : 'them'} before checkout.
+        </div>
+      )}
 
       {!isAuthenticated && (
         <p className="mt-4 rounded-2xl border border-[var(--ck-line)] bg-white/70 p-3 text-sm">
@@ -149,6 +208,17 @@ export default function Checkout() {
             />
             <p className="ck-hint">Optional. Helps our rider find you faster.</p>
           </div>
+          <DeliveryMapPicker
+            value={{ query: form.mapQuery, lat: form.mapLat, lng: form.mapLng }}
+            onChange={(next) =>
+              setForm((f) => ({
+                ...f,
+                mapQuery: next.query,
+                mapLat: next.lat,
+                mapLng: next.lng,
+              }))
+            }
+          />
         </div>
 
         <div className="ck-card-surface ck-card-ink h-fit p-5">
@@ -170,9 +240,17 @@ export default function Checkout() {
             <span>Total</span>
             <span>{formatPrice(checkoutSubtotal)}</span>
           </div>
+          <p className="mt-2 text-xs text-[var(--ck-mute)]">
+            Item total now. Delivery is added after we confirm your location. We will email or call
+            you to pay the full amount.
+          </p>
           {progress && <p className="mt-3 text-sm text-[var(--ck-mute)]">{progress}</p>}
           {error && <p className="mt-3 text-sm text-[var(--ck-danger)]">{error}</p>}
-          <button type="submit" className="ck-btn ck-btn-accent mt-6 w-full" disabled={submitting}>
+          <button
+            type="submit"
+            className="ck-btn ck-btn-accent mt-6 w-full"
+            disabled={submitting || hasUnavailableCheckout}
+          >
             {submitting ? 'Placing order…' : 'Place order'}
           </button>
         </div>

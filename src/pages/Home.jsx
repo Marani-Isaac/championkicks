@@ -5,17 +5,10 @@ import Badge from '../components/Badge'
 import Reveal from '../components/Reveal'
 import WhoWeAre from '../components/WhoWeAre'
 import { productsApi, testimonialsApi, normalizeProducts, normalizeTestimonial, unwrapList } from '../lib/api'
-import { PRODUCT_CATEGORIES } from '../lib/categories'
 import { cardTone } from '../lib/ui'
 
-function lastThreePerCategory(products) {
-  const sorted = [...products].sort((a, b) => Number(b.id || 0) - Number(a.id || 0))
-  const result = []
-  for (const cat of PRODUCT_CATEGORIES) {
-    result.push(...sorted.filter((p) => p.category === cat.value).slice(0, 3))
-  }
-  if (result.length === 0) return sorted.slice(0, 6)
-  return result
+function latestArrivals(products, limit = 8) {
+  return [...products].sort((a, b) => Number(b.id || 0) - Number(a.id || 0)).slice(0, limit)
 }
 
 const stats = [
@@ -97,7 +90,7 @@ export default function Home() {
     }
   }, [])
 
-  const newArrivals = useMemo(() => lastThreePerCategory(products), [products])
+  const newArrivals = useMemo(() => latestArrivals(products, 8), [products])
 
   return (
     <div>
@@ -110,10 +103,10 @@ export default function Home() {
               "linear-gradient(120deg, rgba(11,11,11,0.78) 0%, rgba(11,11,11,0.42) 55%, rgba(11,11,11,0.2) 100%), url('https://images.unsplash.com/photo-1556906781-9a412961c28c?w=1800&q=80')",
           }}
         />
-        <div className="ck-container relative grid min-h-[88vh] items-center gap-12 py-20 lg:grid-cols-2">
+        <div className="ck-container relative grid min-h-[70vh] items-center gap-8 py-12 sm:py-16 lg:min-h-[88vh] lg:grid-cols-2 lg:gap-12 lg:py-20">
           <div className="hero-panel max-w-xl">
             <Badge>Est. Nairobi · Street boutique</Badge>
-            <h1 className="mt-5 font-display text-5xl leading-[1.05] sm:text-6xl md:text-7xl">
+            <h1 className="mt-5 font-display text-4xl leading-[1.08] sm:text-5xl md:text-6xl lg:text-7xl">
               Exclusive clothes and sneakers
               <br />
               <span className="italic text-[var(--ck-accent)]">The biggest the baddest.</span>
@@ -167,11 +160,11 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="ck-container py-20">
-        <div className="mb-10 flex items-end justify-between gap-4">
+      <section className="ck-container py-12 md:py-16 lg:py-20">
+        <div className="mb-8 flex items-end justify-between gap-4 md:mb-10">
           <Reveal>
             <Badge>Fresh drops</Badge>
-            <h2 className="mt-3 font-display text-4xl md:text-5xl">New arrivals</h2>
+            <h2 className="mt-3 font-display text-3xl md:text-5xl">New arrivals</h2>
             <p className="mt-2 text-sm font-normal text-[var(--ck-mute)]">
               Latest additions per collection — hover to feel the pair in 3D.
             </p>
@@ -187,20 +180,23 @@ export default function Home() {
             No products yet. Start the backend on port 5000, then add items in Admin.
           </p>
         )}
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
           {newArrivals.map((product, idx) => (
             <Reveal key={product.id || idx} delay={idx * 70}>
               <ProductCard product={product} showNewBadge />
             </Reveal>
           ))}
         </div>
+        <Link to="/products" className="ck-btn ck-btn-outline mt-6 w-full rounded-full sm:hidden">
+          View all
+        </Link>
       </section>
 
-      <section className="bg-white/50 py-20">
+      <section className="bg-white/50 py-12 md:py-16 lg:py-20">
         <div className="ck-container">
           <Reveal className="mx-auto mb-10 max-w-2xl text-center">
             <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--ck-mute)]">Who we dress</p>
-            <h2 className="mt-2 font-display text-4xl md:text-5xl">Collections with a pulse</h2>
+            <h2 className="mt-2 font-display text-3xl md:text-5xl">Collections with a pulse</h2>
             <p className="mt-3 text-sm font-normal text-[var(--ck-mute)]">
               Step into a lane. Hover a card. The city answers back.
             </p>
@@ -210,9 +206,9 @@ export default function Home() {
               <Reveal key={item.title} delay={i * 70}>
                 <Link to={item.href} className={`ck-premium-card ck-card-shine group block overflow-hidden ${cardTone(i)}`}>
                   <div className="relative h-52 overflow-hidden">
-                    <img
-                      src={item.image}
-                      alt={item.title}
+                <img
+                  src={item.image}
+                  alt={item.title}
                       className="h-full w-full object-cover transition duration-700 group-hover:scale-110"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
@@ -221,8 +217,8 @@ export default function Home() {
                   <div className="p-5">
                     <p className="text-sm font-normal text-[var(--ck-mute)]">{item.desc}</p>
                     <p className="mt-3 text-xs font-semibold uppercase tracking-[0.14em]">Explore →</p>
-                  </div>
-                </Link>
+                </div>
+              </Link>
               </Reveal>
             ))}
           </div>
@@ -231,10 +227,10 @@ export default function Home() {
 
       <WhoWeAre showAboutLink />
 
-      <section className="ck-container py-20">
+      <section className="ck-container py-12 md:py-16 lg:py-20">
         <Reveal className="mb-10 text-center">
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--ck-mute)]">What drives us</p>
-          <h2 className="mt-2 font-display text-4xl md:text-5xl">The Champion code</h2>
+          <h2 className="mt-2 font-display text-3xl md:text-5xl">The Champion code</h2>
         </Reveal>
         <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
           {values.map((value, i) => (
@@ -255,13 +251,13 @@ export default function Home() {
             <img
               src="https://images.unsplash.com/photo-1552346154-21d32810aba3?w=1100&q=80"
               alt="Sneaker lifestyle"
-              className="h-[420px] w-full object-cover"
+              className="h-56 w-full object-cover sm:h-[420px]"
             />
           </div>
         </Reveal>
         <Reveal delay={120}>
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--ck-mute)]">Why Champion Kicks</p>
-          <h2 className="mt-3 font-display text-4xl md:text-5xl">The story behind the sole</h2>
+          <h2 className="mt-3 font-display text-3xl md:text-5xl">The story behind the sole</h2>
           <ul className="mt-6 space-y-5">
             {[
               ['Curated, not crowded', 'We edit the rack so every pair earns its place.'],
@@ -284,17 +280,17 @@ export default function Home() {
         <div className="ck-container">
           <Reveal className="mb-8">
             <Badge>Voices</Badge>
-            <h2 className="mt-3 font-display text-4xl">What the city says</h2>
+            <h2 className="mt-3 font-display text-3xl md:text-4xl">What the city says</h2>
           </Reveal>
-          <div className="grid gap-5 md:grid-cols-3">
+          <div className="grid max-w-3xl grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
             {testimonials.length === 0 && (
               <p className="text-sm text-[var(--ck-mute)]">Customer stories appear here once approved.</p>
             )}
             {testimonials.map((t, i) => (
               <Reveal key={t.id} delay={i * 90}>
-                <blockquote className={`ck-premium-card h-full p-6 ${cardTone(i)}`}>
-                  <p className="font-display text-2xl leading-snug">&ldquo;{t.comment}&rdquo;</p>
-                  <footer className="mt-4 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--ck-mute)]">
+                <blockquote className={`ck-premium-card p-4 ${cardTone(i)}`}>
+                  <p className="text-base font-normal leading-relaxed">&ldquo;{t.comment}&rdquo;</p>
+                  <footer className="mt-2 text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-[var(--ck-mute)]">
                     {t.username || 'Champion Kicks customer'} · {t.rating}/5
                   </footer>
                 </blockquote>
@@ -304,13 +300,13 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="relative overflow-hidden bg-[var(--ck-ink)] py-20 text-white">
+      <section className="relative overflow-hidden bg-[var(--ck-ink)] py-12 text-white md:py-16 lg:py-20">
         <div
           className="pointer-events-none absolute -right-16 top-0 h-64 w-64 rounded-full bg-[var(--ck-accent)]/20 blur-3xl"
           style={{ transform: `translateY(${scrollY * 0.08}px)` }}
         />
         <Reveal className="ck-container relative text-center">
-          <h2 className="font-display text-4xl md:text-5xl">Ready for the next drop?</h2>
+          <h2 className="font-display text-3xl md:text-5xl">Ready for the next drop?</h2>
           <p className="mx-auto mt-4 max-w-xl text-base font-normal text-white/75">
             Browse the catalog or walk the story with us. Either way, leave louder than you arrived.
           </p>
@@ -323,8 +319,8 @@ export default function Home() {
               className="ck-btn rounded-full border border-white/40 px-8 text-white hover:bg-white hover:text-[var(--ck-ink)]"
             >
               Talk to us
-            </Link>
-          </div>
+          </Link>
+        </div>
         </Reveal>
       </section>
     </div>

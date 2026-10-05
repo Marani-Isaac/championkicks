@@ -1,4 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
+import { productsApi, normalizeProducts } from '../lib/api'
+import { isCartItemAvailable, isProductAvailable } from '../lib/format'
 
 const CartContext = createContext(null)
 const STORAGE_KEY = 'ck_cart'
@@ -24,14 +26,33 @@ function readBuyNow() {
 }
 
 function toLineItem(product, quantity = 1) {
+  const available = product.available !== false && isProductAvailable(product.available)
   return {
     id: product.id,
     name: product.name,
     price: Number(product.price) || 0,
     image_url: product.image_url,
     category: product.category,
-    stock: product.stock,
+    available,
+    stock: available ? product.stock ?? 99 : 0,
     quantity,
+  }
+}
+
+function mergeCatalogItem(item, catalog) {
+  const live = catalog.find((p) => String(p.id) === String(item.id))
+  if (!live) {
+    return { ...item, available: false, stock: 0 }
+  }
+  const available = live.available !== false
+  return {
+    ...item,
+    name: live.name || item.name,
+    price: Number(live.price) || item.price,
+    image_url: live.image_url || item.image_url,
+    category: live.category || item.category,
+    available,
+    stock: available ? live.stock ?? 99 : 0,
   }
 }
 
@@ -43,7 +64,28 @@ export function CartProvider({ children }) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(items))
   }, [items])
 
+  useEffect(() => {
+    let active = true
+    ;(async () => {
+      try {
+        const { data } = await productsApi.getAll()
+        if (!active) return
+        const catalog = normalizeProducts(data)
+        setItems((prev) => prev.map((item) => mergeCatalogItem(item, catalog)))
+        setBuyNowItems((prev) =>
+          prev ? prev.map((item) => mergeCatalogItem(item, catalog)) : prev,
+        )
+      } catch {
+        /* keep stored cart if catalog cannot be loaded */
+      }
+    })()
+    return () => {
+      active = false
+    }
+  }, [])
+
   const addItem = (product, quantity = 1) => {
+    if (product.available === false || (product.stock ?? 99) <= 0) return
     setItems((prev) => {
       const existing = prev.find((i) => i.id === product.id)
       if (existing) {
@@ -54,6 +96,22 @@ export function CartProvider({ children }) {
         )
       }
       return [...prev, toLineItem(product, quantity)]
+    })
+  }
+
+  const adjustItem = (product, delta) => {
+    setItems((prev) => {
+      const max = product.stock ?? 99
+      const existing = prev.find((i) => i.id === product.id)
+      if (!existing) {
+        if (delta <= 0) return prev
+        return [...prev, toLineItem(product, Math.min(Math.max(delta, 1), max))]
+      }
+      const nextQty = (existing.quantity || 0) + delta
+      if (nextQty <= 0) return prev.filter((i) => i.id !== product.id)
+      return prev.map((i) =>
+        i.id === product.id ? { ...i, quantity: Math.min(nextQty, i.stock ?? max) } : i,
+      )
     })
   }
 
@@ -75,7 +133,7 @@ export function CartProvider({ children }) {
       prev
         .map((i) => {
           if (i.id !== id) return i
-          const next = Math.max(1, Math.min(quantity, i.stock ?? 99))
+          const next = Math.max(0, Math.min(quantity, i.stock ?? 99))
           return { ...i, quantity: next }
         })
         .filter((i) => i.quantity > 0),
@@ -93,15 +151,22 @@ export function CartProvider({ children }) {
       (sum, i) => sum + Number(i.price) * (i.quantity || 0),
       0,
     )
+    const unavailableItems = items.filter((item) => !isCartItemAvailable(item))
+    const unavailableCheckoutItems = checkoutItems.filter((item) => !isCartItemAvailable(item))
     return {
       items,
       itemCount,
       subtotal,
+      unavailableItems,
+      hasUnavailable: unavailableItems.length > 0,
       buyNowItems,
       isBuyNow,
       checkoutItems,
       checkoutSubtotal,
+      unavailableCheckoutItems,
+      hasUnavailableCheckout: unavailableCheckoutItems.length > 0,
       addItem,
+      adjustItem,
       startBuyNow,
       clearBuyNow,
       removeItem,

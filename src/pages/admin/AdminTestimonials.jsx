@@ -31,13 +31,11 @@ export default function AdminTestimonials() {
     setError('')
     try {
       // Backend has no update route — re-insert as approved copy for moderation workflow
-      await testimonialsApi.create({
-        username: item.username,
-        review: item.comment,
-        rating: String(item.rating || 5),
+      await testimonialsApi.update({
+        testimonial_id: String(item.id),
         approved: '1',
       })
-      setMessage(`Published an approved copy of testimonial #${item.id}.`)
+      setMessage(`Published testimonial #${item.id}.`)
       await load()
     } catch (err) {
       setError(err.response?.data?.message || err.message || 'Approve failed')
@@ -50,8 +48,8 @@ export default function AdminTestimonials() {
         Testimonial Moderation
       </h1>
       <p className="mt-2 text-sm text-[#9a9a9a]">
-        Lists all reviews via <code>GET /api/get_testimonials?approved=false</code>. Approving posts a new
-        approved row (backend has no PATCH route).
+        Lists all reviews via <code>GET /api/get_testimonials?approved=false</code>. Approving updates the
+        existing row to <code>approved=1</code>.
       </p>
 
       {message && <p className="mt-4 text-sm text-[var(--ck-success)]">{message}</p>}

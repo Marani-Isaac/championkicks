@@ -14,8 +14,8 @@ export default function About() {
   return (
     <div>
       <section className="border-b border-[var(--ck-line)] bg-[var(--ck-ink)] text-white">
-        <div className="ck-container py-16">
-          <p className="font-display text-6xl md:text-7xl">About Us</p>
+        <div className="ck-container py-10 sm:py-16">
+          <p className="font-display ck-page-title md:text-7xl">About Us</p>
           <p className="mt-4 max-w-2xl text-base font-normal text-white/75">
             Exclusive clothes and sneakers. The biggest. The baddest. Champion Kicks is Kenya&apos;s
             house for verified heat — with branches in Nairobi and Eldoret.

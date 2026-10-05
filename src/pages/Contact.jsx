@@ -89,31 +89,10 @@ export default function Contact() {
 
   return (
     <div className="ck-container py-12">
-      <h1 className="font-display text-5xl">Contact Us</h1>
+      <h1 className="font-display ck-page-title">Contact Us</h1>
       <p className="mt-2 max-w-xl text-sm font-normal text-[var(--ck-mute)]">
         Visit a branch, call or WhatsApp {PHONE_DISPLAY}, or leave a review for the team.
       </p>
-
-      <div className="mt-8 grid gap-6 md:grid-cols-2">
-        {BRANCHES.map((branch) => (
-          <article key={branch.city} className="ck-premium-card overflow-hidden">
-            <div className="p-5">
-              <p className="text-xs font-semibold uppercase tracking-[0.08em] text-[var(--ck-mute)]">
-                {branch.city} branch
-              </p>
-              <h2 className="mt-1 font-display text-3xl">{branch.name}</h2>
-              {branch.detail && <p className="mt-1 text-sm text-[var(--ck-mute)]">{branch.detail}</p>}
-            </div>
-            <iframe
-              title={`${branch.city} map`}
-              src={mapsEmbedUrl(branch.mapQuery)}
-              className="h-64 w-full border-0"
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-            />
-          </article>
-        ))}
-      </div>
 
       <div className="mt-8 grid gap-8 lg:grid-cols-2">
         <form onSubmit={onSubmit} className="ck-card-surface space-y-4 p-5">
@@ -195,6 +174,27 @@ export default function Contact() {
             <SocialLinks />
           </div>
         </div>
+      </div>
+
+      <div className="mt-8 grid gap-6 md:grid-cols-2">
+        {BRANCHES.map((branch) => (
+          <article key={branch.city} className="ck-premium-card overflow-hidden">
+            <div className="p-5">
+              <p className="text-xs font-semibold uppercase tracking-[0.08em] text-[var(--ck-mute)]">
+                {branch.city} branch
+              </p>
+              <h2 className="mt-1 font-display text-3xl">{branch.name}</h2>
+              {branch.detail && <p className="mt-1 text-sm text-[var(--ck-mute)]">{branch.detail}</p>}
+            </div>
+            <iframe
+              title={`${branch.city} map`}
+              src={mapsEmbedUrl(branch.mapQuery)}
+              className="h-48 w-full border-0 sm:h-64"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+          </article>
+        ))}
       </div>
     </div>
   )

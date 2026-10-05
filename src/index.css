@@ -23,11 +23,14 @@
 html {
   scroll-behavior: smooth;
   background: var(--ck-paper);
+  overflow-x: clip;
 }
 
 body {
   margin: 0;
   min-height: 100vh;
+  max-width: 100%;
+  overflow-x: clip;
   font-family: var(--font-body);
   color: var(--ck-ink);
   background:
@@ -58,8 +61,23 @@ img {
 }
 
 .ck-container {
-  width: min(1180px, calc(100% - 2rem));
+  width: min(1180px, calc(100% - 1.25rem));
   margin-inline: auto;
+}
+
+@media (min-width: 640px) {
+  .ck-container {
+    width: min(1180px, calc(100% - 2rem));
+  }
+}
+
+.ck-page-title {
+  font-size: clamp(1.85rem, 7vw, 3.15rem);
+  line-height: 1.1;
+}
+
+body.ck-nav-lock {
+  overflow: hidden;
 }
 
 .ck-btn {
@@ -81,7 +99,13 @@ img {
   border-radius: 9999px;
 }
 
-.ck-btn:hover {
+.ck-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.ck-btn:hover:not(:disabled) {
   transform: translateY(-1px);
 }
 
@@ -114,6 +138,70 @@ img {
 .ck-btn-outline:hover {
   background: var(--ck-ink);
   color: #fff;
+}
+
+.ck-qty {
+  display: inline-flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  overflow: hidden;
+  border: 1px solid var(--ck-line);
+  border-radius: 0.85rem;
+  background: #fff;
+  color: var(--ck-ink);
+}
+
+.ck-qty-btn {
+  display: inline-flex;
+  min-width: 2.5rem;
+  height: 2.35rem;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: var(--ck-ink);
+  color: #fff;
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.ck-qty-btn:hover:not(:disabled) {
+  background: #222;
+}
+
+.ck-qty-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.35;
+}
+
+.ck-qty-value {
+  flex: 1;
+  text-align: center;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.ck-cart-tab {
+  position: relative;
+  overflow: visible;
+}
+
+.ck-cart-count {
+  display: inline-flex;
+  min-width: 1.15rem;
+  height: 1.15rem;
+  margin-left: 0.4rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: #e11d1d;
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  line-height: 1;
+  padding: 0 0.28rem;
 }
 
 .ck-badge {
@@ -440,6 +528,107 @@ img {
   border-color: transparent;
 }
 
+.ck-menu-btn {
+  display: inline-flex;
+  height: 2.6rem;
+  width: 2.6rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--ck-line);
+  border-radius: 0.75rem;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(11, 11, 11, 0.05);
+  cursor: pointer;
+}
+
+.ck-menu-icon,
+.ck-menu-icon::before,
+.ck-menu-icon::after {
+  display: block;
+  width: 1.05rem;
+  height: 2px;
+  background: var(--ck-ink);
+  border-radius: 99px;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.ck-menu-icon {
+  position: relative;
+}
+
+.ck-menu-icon::before,
+.ck-menu-icon::after {
+  content: '';
+  position: absolute;
+  left: 0;
+}
+
+.ck-menu-icon::before {
+  top: -6px;
+}
+
+.ck-menu-icon::after {
+  top: 6px;
+}
+
+.ck-menu-icon.is-open {
+  background: transparent;
+}
+
+.ck-menu-icon.is-open::before {
+  top: 0;
+  transform: rotate(45deg);
+}
+
+.ck-menu-icon.is-open::after {
+  top: 0;
+  transform: rotate(-45deg);
+}
+
+.ck-mobile-overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  z-index: 55;
+  display: none;
+  pointer-events: none;
+}
+
+.ck-mobile-overlay.is-open {
+  display: block;
+  pointer-events: auto;
+}
+
+.ck-nav-backdrop {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 100vh;
+  border: 0;
+  background: rgba(11, 11, 11, 0.35);
+}
+
+.ck-mobile-panel {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: 0.75rem 0 1rem;
+  background: rgba(247, 245, 242, 0.98);
+  border-bottom: 1px solid var(--ck-line);
+  box-shadow: 0 18px 36px rgba(11, 11, 11, 0.14);
+}
+
+.ck-mobile-link {
+  width: 100%;
+  justify-content: flex-start;
+  padding: 0.85rem 1rem;
+  font-size: 0.95rem;
+}
+
 .admin-shell {
   min-height: 100vh;
   background: #111;
@@ -461,12 +650,19 @@ img {
 }
 
 /* Soften Bootstrap defaults to match brand */
+.nav-tabs {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 .nav-tabs .nav-link {
   border-radius: 0.65rem 0.65rem 0 0;
   color: var(--ck-mute);
   border: none;
   border-bottom: 2px solid transparent;
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .nav-tabs .nav-link.active {
@@ -482,12 +678,12 @@ img {
 
 .ck-whatsapp-float {
   position: fixed;
-  right: 1.15rem;
-  bottom: 1.15rem;
+  right: max(0.75rem, env(safe-area-inset-right));
+  bottom: max(0.75rem, env(safe-area-inset-bottom));
   z-index: 60;
   display: inline-flex;
-  height: 3.75rem;
-  width: 3.75rem;
+  height: 3.25rem;
+  width: 3.25rem;
   align-items: center;
   justify-content: center;
   overflow: hidden;
@@ -500,4 +696,23 @@ img {
 .ck-whatsapp-float:hover {
   transform: translateY(-3px) scale(1.06);
   box-shadow: 0 16px 36px rgba(37, 211, 102, 0.55);
+}
+
+iframe {
+  max-width: 100%;
+}
+
+@media (min-width: 640px) {
+  .ck-whatsapp-float {
+    height: 3.75rem;
+    width: 3.75rem;
+    right: 1.15rem;
+    bottom: 1.15rem;
+  }
+}
+
+@media (hover: none) {
+  .product-card:hover img {
+    transform: none;
+  }
 }

@@ -10,11 +10,11 @@ const mosaic = [
 
 export default function WhoWeAre({ showAboutLink = false }) {
   return (
-    <section className="ck-container py-20">
+    <section className="ck-container py-12 md:py-16 lg:py-20">
       <div className="grid items-center gap-12 lg:grid-cols-2">
         <Reveal>
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--ck-mute)]">Who we are</p>
-          <h2 className="mt-3 font-display text-4xl md:text-5xl">A boutique written in sneakers</h2>
+          <h2 className="mt-3 font-display text-3xl md:text-5xl">A boutique written in sneakers</h2>
           <p className="mt-4 text-base font-normal leading-relaxed text-[var(--ck-mute)]">
             We started with a simple belief: Kenya deserves a house where the drop feels like an
             event and the fit feels personal. Champion Kicks curates footwear and apparel for
@@ -45,7 +45,7 @@ export default function WhoWeAre({ showAboutLink = false }) {
                 key={src}
                 src={src}
                 alt=""
-                className={`h-44 w-full rounded-[1.15rem] object-cover shadow-sm sm:h-52 ${i % 2 ? 'translate-y-4' : ''}`}
+                className={`h-36 w-full rounded-[1.15rem] object-cover shadow-sm sm:h-52 ${i % 2 ? 'sm:translate-y-4' : ''}`}
               />
             ))}
           </div>
